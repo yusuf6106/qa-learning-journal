@@ -37,3 +37,15 @@ automation/
 ## Goal
 
 Become a Software Test Engineer by building real-world testing knowledge and sharing my learning journey.
+
+## Learning Philosophy
+
+Learn.
+
+Practice.
+
+Document.
+
+Improve.
+
+Repeat.
