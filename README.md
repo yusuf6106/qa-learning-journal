@@ -48,4 +48,26 @@ Document.
 
 Improve.
 
+## Current Progress
+
+- ISTQB Foundation Level
+- Manual Testing
+- Test Case Design
+- QA Observation Journal
+- GitHub Portfolio
+
+---
+
+## Learning Philosophy
+
+Learn.
+
+Practice.
+
+Document.
+
+Improve.
+
+Repeat.
+
 Repeat.
