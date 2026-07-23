@@ -1,1 +1,0 @@
-# Manual Consumption Test Cases
