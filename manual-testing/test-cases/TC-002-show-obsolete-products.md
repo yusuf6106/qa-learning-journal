@@ -38,7 +38,9 @@ After the sorting direction was changed manually, obsolete products were ordered
 The secondary sorting rule used for obsolete products is not clear to the user. If a secondary sorting criterion is defined in the requirement, it should be verified separately. Otherwise, this behavior may be documented as a usability or requirement-clarity improvement.
 
 ## Evidence
-A sanitized mockup will be added to protect confidential company data.
+Sanitized mockup created for portfolio purposes:
+
+![Show Obsolete Products Mockup](TC-002-show-obsolete-products-mockup.png)
 
 ## Given–When–Then
 **Given** obsolete products are hidden from the list by default,  
