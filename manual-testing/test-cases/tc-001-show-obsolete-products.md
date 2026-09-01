@@ -1,4 +1,4 @@
-# TC-002 — Show Obsolete Products
+# TC-001 — Show Obsolete Products
 
 ## Test Objective
 Verify that the **Show Obsolete Products** option on the **Stock Cards** page meets the defined requirement.
@@ -40,7 +40,7 @@ The secondary sorting rule used for obsolete products is not clear to the user. 
 ## Evidence
 Sanitized mockup created for portfolio purposes:
 
-![Show Obsolete Products Mockup](TC-002-show-obsolete-products-mockup.png)
+![Show Obsolete Products Mockup](../assets/tc-001-show-obsolete-products-mockup.png)
 
 ## Given–When–Then
 **Given** obsolete products are hidden from the list by default,  
