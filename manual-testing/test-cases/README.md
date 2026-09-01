@@ -1,10 +1,13 @@
 # Manual Testing — Test Cases
 
-This folder contains manual test cases based on real ERP scenarios.
+This folder contains manual test cases based on real ERP and business logic scenarios, documented with industry-standard QA methodologies (Equivalence Partitioning, Boundary Value Analysis, and Positive/Negative Validation).
 
-## Test Cases
+---
 
-| ID | Test Case | Result |
-|---|---|---|
-| TC-ERP-001 | [Decimal Consumption for Unit-Based Stock Cards](TC-ERP-001_Adet_Bazli_Stok_Kartinda_Ondalikli_Sarf.md) | Bug Found |
-| TC-002 | [Show Obsolete Products](TC-002-show-obsolete-products.md) | PASS |
+## Test Cases Index
+
+| ID | Test Case | Technique / Focus | Result |
+| :---: | :--- | :--- | :---: |
+| **TC-001** | [Show Obsolete Products](./tc-001-show-obsolete-products.md) | UI State & Filtering | Pass |
+| **TC-002** | [Stock Consumption Integer Validation](./tc-002-stock-consumption-integer-validation.md) | Boundary & Data Type Validation | **Fail (Bug Found)** |
+| **TC-003** | [Discount Rate Input Validation](./tc-003-discount-rate-equivalence-partitioning.md) | Equivalence Partitioning & BVA | Ready |
