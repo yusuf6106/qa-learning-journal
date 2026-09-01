@@ -1,114 +1,63 @@
 # TC-002 — Stock Consumption Integer Validation
 
-## Genel Bilgiler
+## 1. Document Control
 
-| Alan | Değer |
-|---|---|
-| Test Case ID | TC-ERP-001 |
-| Modül | Depo |
-| Ekran | Manuel Sarf |
-| Test Türü | Fonksiyonel Test / Negatif Test / Karşılaştırmalı Test |
-| Severity | High |
-| Priority | High / Urgent |
-| Durum | Fail |
+| Field | Value |
+| :--- | :--- |
+| **Test Case ID** | TC-002 |
+| **Module** | Warehouse / Inventory Management |
+| **Screen** | Manual Stock Consumption (`/inventory/manual-consumption`) |
+| **Test Level** | Functional Testing / Negative Testing / Boundary Value Analysis |
+| **Severity** | High |
+| **Priority** | High / Urgent (P1) |
+| **Status** | Fail (Bug Found) |
 
-## Başlık
+---
 
-**Adet bazında takip edilen stok kartında ondalıklı sarf yapılabilmesi**
+## 2. Test Objective
+Verify that the ERP system prevents entering decimal consumption quantities (e.g., `1.5` or `0.75`) for discrete/unit-based stock items (Unit: "Piece / Adet"), enforcing integer-only input validation to maintain inventory integrity.
 
-## Kısa Açıklama
+---
 
-Manuel Sarf ekranında, stok birimi **adet** olan bir ürün için ondalıklı miktar girilebilmekte ve sistem bu işlemi başarıyla tamamlamaktadır. Adet bazlı ürünlerde yalnızca tam sayı kabul edilmesi beklenmektedir.
+## 3. Business Rules (BR)
+* **BR-01:** For items configured with unit type "Piece" (`Unit = PCS / Adet`), the consumption quantity must strictly accept positive whole integers ($X \ge 1$, integer only).
+* **BR-02:** Decimal entries for unit-based stock items must be blocked by the frontend/backend and display an explicit validation message: `"Decimal values are not allowed for unit-based items."`
+* **BR-03:** Form submission must be disabled until a valid integer is supplied.
 
-## Ön Koşullar
+---
 
-1. Sistemde stok birimi **adet** olan ve yeterli stok miktarına sahip aktif bir stok kartı bulunmalıdır.
-2. Sistemde ondalıklı miktarla takip edilen aktif bir stok kartı bulunmalıdır.
-3. Kullanıcının **Manuel Sarf** ekranına erişim ve işlem yapma yetkisi olmalıdır.
-4. Her iki stok kartı da sarf işlemine uygun durumda olmalıdır.
+## 4. Preconditions
+1. Tester is logged into the ERP system with authorized warehouse/inventory roles.
+2. A discrete test product exists in the system with unit configured as **"Piece" (Adet)** (e.g., `PRD-DISC-001`).
+3. Sufficient stock balance is available for the test item.
+4. User has navigated to the **Manual Stock Consumption** screen.
 
-## Test Verileri
+---
 
-| Stok Kartı Türü | Mevcut Miktar | Girilecek Sarf Miktarı | Amaç |
-|---|---:|---:|---|
-| Adet bazlı stok kartı | 100 adet | 20 adet | Geçerli tam sayı kontrolü |
-| Adet bazlı stok kartı | 100 adet | 2,4 adet | Geçersiz ondalıklı değer kontrolü |
-| Ondalıklı stok kartı | 16,8 birim | 2,4 birim | Geçerli ondalıklı değer kontrolü |
+## 5. Test Execution Steps
 
-## Test Adımları
+| Step | Action | Test Data | Expected Result | Actual Result | Status |
+| :---: | :--- | :--- | :--- | :--- | :---: |
+| **01** | Open the Manual Stock Consumption screen | N/A | Consumption form loads with all default fields empty and enabled. | Form loaded as expected | Pass |
+| **02** | Select the discrete/unit-based test item | `PRD-DISC-001` (Unit: PCS) | Item is selected; unit type "Piece / Adet" is displayed on screen. | Item selected successfully | Pass |
+| **03** | Enter a valid integer quantity | `5` | Field accepts value `5`; form permits submission. | Value accepted | Pass |
+| **04** | Enter a decimal quantity into the quantity field | `1.5` | Input is either blocked or inline error is triggered: `"Decimal values are not allowed for unit-based items."` | Field accepts `1.5` without warning | **Fail** |
+| **05** | Click **Save / Submit** button with decimal value | Quantity = `1.5` | System rejects transaction; displays validation error and blocks stock ledger update. | Transaction is saved; stock reduced by `1.5` | **Fail** |
 
-1. **Manuel Sarf** ekranını aç.
-2. Stok birimi **adet** olan stok kartını seç.
-3. Sarf miktarı alanına `20` gir ve işlemi tamamla.
-4. İşlemin başarıyla gerçekleştiğini doğrula.
-5. Aynı stok kartı için sarf miktarı alanına `2,4` gir.
-6. İşlemi tamamlamayı dene.
-7. Sistemin verdiği tepkiyi kaydet.
-8. Ondalıklı takip edilen stok kartını seç.
-9. Sarf miktarı alanına `2,4` gir ve işlemi tamamla.
-10. İşlemin başarıyla gerçekleştiğini doğrula.
+---
 
-## Beklenen Sonuç
+## 6. Bug Summary & Defect Details
+* **Defect Title:** System permits decimal stock consumption for discrete (unit-based) items.
+* **Impact:** Causes fractional physical stock records in warehouse ledger (e.g., `48.5` units), violating inventory accounting and MRP rules.
+* **Suggested Fix:** Implement input mask validation on UI to restrict input to integers for unit-based items, backed by server-side validation rejecting float payloads.
 
-1. Stok birimi **adet** olan kart için sarf miktarı alanına `2,4` girildiğinde sistem işlemi gerçekleştirmemelidir.
-2. Kullanıcıya, adet bazlı ürünlerde yalnızca tam sayı girilebileceğini belirten anlaşılır bir doğrulama mesajı gösterilmelidir.
-3. Stok miktarında herhangi bir değişiklik oluşmamalı ve başarısız işlem kaydedilmemelidir.
-4. Ondalıklı takip edilen stok kartında `2,4` değeri kabul edilmeli ve sarf işlemi başarıyla tamamlanmalıdır.
+---
 
-## Gerçekleşen Sonuç
+## 7. Given–When–Then (BDD Format)
 
-1. Adet bazlı stok kartı için sarf miktarı alanına `2,4` girildiğinde sistem işlemi kabul etmektedir.
-2. Sistem, sarf işleminin başarıyla tamamlandığını belirten olumlu bir mesaj göstermektedir.
-3. Stok miktarı `100` adetten `97,6` adede düşmekte ve ondalıklı sarf işlemi sisteme kaydedilmektedir.
-4. Ondalıklı takip edilen stok kartında `2,4` değeri de başarıyla işlenmektedir.
-
-## İş Etkisi
-
-Hata, adet bazında takip edilmesi gereken stokların ondalıklı miktarlara düşmesine ve stok verilerinin güvenilirliğini kaybetmesine neden olabilir.
-
-Yanlış stok miktarları:
-
-- Gereksiz satın alma yapılmasına,
-- İhtiyaçların geç fark edilmesine,
-- Üretim planlarının malzeme eksikliği nedeniyle aksamasına,
-- Müşteri teslim tarihlerinin gecikmesine
-
-yol açabilir. Hatanın stok, satın alma, planlama, üretim ve teslimat süreçlerini etkileyebilmesi nedeniyle iş etkisi yüksektir.
-
-## Test Ortamı
-
-### Masaüstü
-
-- Cihaz: Dizüstü bilgisayar
-- İşletim sistemi: Windows 11
-- Tarayıcı: Microsoft Edge
-
-### Mobil
-
-- Cihaz: Realme 12 Pro 5G
-- İşletim sistemi: Android 16
-- Tarayıcı: Microsoft Edge Mobile
-
-## Platformlar Arası Davranış Farkı
-
-Masaüstü ortamında nokta karakteri kabul edilmemekte, virgül ondalık ayırıcı olarak kullanılabilmektedir.
-
-Mobil ortamda da nokta kabul edilmemektedir; ancak virgülün sayının başında girilmesine izin verilmekte ve giriş ondalıklı bir değere dönüştürülmektedir.
-
-Masaüstü ve mobil alan doğrulamalarının farklı davranması, platformlar arasında tutarsızlık oluşturmaktadır.
-
-## İyileştirme Önerisi
-
-Sistemde ürün veya stok kartı bazında miktar tipini belirleyen bir doğrulama kuralı bulunmalıdır.
-
-- **Adet bazlı ürünlerde:** yalnızca tam sayı kabul edilmelidir.
-- **Ondalıklı takip edilen ürünlerde:** tanımlı ondalık hassasiyet kadar girişe izin verilmelidir.
-- Aynı doğrulama kuralları masaüstü ve mobil platformlarda tutarlı şekilde uygulanmalıdır.
-
-## Ekler
-
-- Ekran görüntüsü
-- İşlem öncesi stok miktarı
-- İşlem sonrası stok miktarı
-- Başarı mesajı
-- Mobil ve masaüstü davranış karşılaştırması
+```gherkin
+Given the user is on the Manual Stock Consumption screen
+  And a stock item with unit type "Piece" is selected
+When the user enters a decimal quantity of "1.5" and submits the form
+Then the system should reject the transaction
+  And display an error message "Decimal values are not allowed for unit-based items."
