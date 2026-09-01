@@ -1,4 +1,4 @@
-# TC-ERP-001 — Adet Bazlı Stok Kartında Ondalıklı Sarf İşlemi
+# TC-002 — Stock Consumption Integer Validation
 
 ## Genel Bilgiler
 
